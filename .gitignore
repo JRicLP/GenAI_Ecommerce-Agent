@@ -1,0 +1,7 @@
+# Não commitar arquivos de banco de dados, variáveis de ambiente, arquivos compilados e cache
+
+banco.db
+.env
+*.pyc
+__pycache__/
+.DS_Store
