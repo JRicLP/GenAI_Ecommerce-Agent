@@ -46,6 +46,6 @@ def consultar(pergunta: str) -> AgentResponse:
 
     async def _run():
         resultado = await agent.run(pergunta)
-        return resultado.data
+        return resultado.output
 
     return asyncio.get_event_loop().run_until_complete(_run())
