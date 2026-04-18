@@ -19,7 +19,7 @@ model = GoogleModel(
 # Cria o agente com tipo de resposta estruturada
 agent = Agent(
     model=model,
-    result_type=AgentResponse,
+    output_type=AgentResponse,
     system_prompt=SYSTEM_PROMPT,
     tools=[execute_sql]
 )
