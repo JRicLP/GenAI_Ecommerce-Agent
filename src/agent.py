@@ -1,6 +1,7 @@
 """Agente principal que orquestra a interação entre
 o modelo Gemini, as ferramentas e os guardrails."""
 
+import asyncio
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.providers.google import GoogleProvider
@@ -28,14 +29,13 @@ def consultar(pergunta: str) -> AgentResponse:
     """
     Ponto de entrada principal do agente.
     Recebe uma pergunta em português e retorna uma resposta estruturada.
-    
+
     Args:
         pergunta: Pergunta do usuário sobre os dados de e-commerce.
-        
+
     Returns:
         AgentResponse com a resposta, SQL gerado e metadados.
     """
-    # Guardrail de escopo antes de chamar o modelo
     if not validar_escopo_pergunta(pergunta):
         return AgentResponse(
             resposta=MENSAGEM_FORA_DE_ESCOPO,
@@ -43,6 +43,9 @@ def consultar(pergunta: str) -> AgentResponse:
             tem_dados=False,
             sugestao_grafico=None
         )
-    # Chama o agente — o Pydantic AI orquestra o loop modelo -> tool -> modelo
-    resultado = agent.run_sync(pergunta)
-    return resultado.data
+
+    async def _run():
+        resultado = await agent.run(pergunta)
+        return resultado.data
+
+    return asyncio.get_event_loop().run_until_complete(_run())
