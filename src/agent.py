@@ -11,9 +11,9 @@ from src.tools import execute_sql
 from src.guardrails import validar_escopo_pergunta, MENSAGEM_FORA_DE_ESCOPO
 from src.schema_prompt import SYSTEM_PROMPT
 
-# Inicializa o modelo Gemini 2.5 Flash
+# Inicializa o modelo Gemini 2.0 Flash 
 model = GoogleModel(
-    "gemini-2.5-flash",
+    "gemini-2.0-flash", #Temporário
     provider=GoogleProvider(api_key=GEMINI_API_KEY),
 )
 
