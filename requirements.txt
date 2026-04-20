@@ -2,3 +2,4 @@ pydantic-ai
 google-generativeai
 pydantic
 python-dotenv
+matplotlib
