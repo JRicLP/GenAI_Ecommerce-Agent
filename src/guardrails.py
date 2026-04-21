@@ -30,17 +30,24 @@ PADROES_INJECTION = [
     r"dan\s+mode",
 ]
 
-TAMANHO_MAXIMO_QUERY = 500  # Limite de caracteres para a query SQL
+TAMANHO_MAXIMO_PERGUNTA = 500  # Limite de caracteres para a query SQL
 
-MENSAGEM_INJECTION = ("Sua pergunta contém termos que parecem ser uma tentativa de manipular o sistema. " \
-                     "Por questões de segurança, não posso processar esse tipo de pergunta. " \
+MENSAGEM_INJECTION = (
+    "Sua pergunta contém termos que parecem ser uma tentativa de manipular o sistema." 
+    "Por questões de segurança, não posso processar esse tipo de pergunta. "
+)
+
+MENSAGEM_FORA_DE_ESCOPO = (
+    "Posso ajudar apenas com análises do sistema de e-commerce, "
+    "como vendas, pedidos, produtos, consumidores e avaliações. "
+    "Como posso ajudar com algum desses temas?"
 )
 
 MENSAGEM_MUITO_LONGA = (
-    f"A query é muito longa. O limite é de {TAMANHO_MAXIMO_QUERY} caracteres."
+    f"A query é muito longa. O limite é de {TAMANHO_MAXIMO_PERGUNTA} caracteres."
 )
 
-def validar_tamanho_pergunta(pergunta: str, limite: int = TAMANHO_MAXIMO_QUERY) -> bool:
+def validar_tamanho_pergunta(pergunta: str, limite: int = TAMANHO_MAXIMO_PERGUNTA) -> bool:
     """ Valida se a pergunta do usuário não excede um limite de caracteres."""
     return len((pergunta or "").strip()) <= limite
 
@@ -69,7 +76,7 @@ def validar_tamanho_query(query: str) -> None:
     Args:
         query (str): A query SQL a ser validada.
     """
-    if len(query) > TAMANHO_MAXIMO_QUERY:
+    if len(query) > TAMANHO_MAXIMO_PERGUNTA:
         raise ValueError(MENSAGEM_MUITO_LONGA)
 
 def validar_query_sql(query: str) -> None:
@@ -103,9 +110,3 @@ def validar_escopo_pergunta(pergunta: str) -> bool:
         if termo in pergunta_lower:
             return False
     return True
-
-MENSAGEM_FORA_DE_ESCOPO = (
-    "Posso ajudar apenas com análises do sistema de e-commerce, "
-    "como vendas, pedidos, produtos, consumidores e avaliações. "
-    "Como posso ajudar com algum desses temas?"
-)

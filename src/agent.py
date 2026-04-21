@@ -3,7 +3,7 @@ o modelo Gemini, as ferramentas e os guardrails."""
 
 import asyncio
 from time import sleep
-from pydantic_ai import Agent, ModelHTTPError
+from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.providers.google import GoogleProvider
 from src.config import GEMINI_API_KEY
@@ -66,6 +66,7 @@ def consultar(pergunta: str) -> AgentResponse:
             tem_dados=False,
             sugestao_grafico=None
         )
+    
         # Guardrail 3: escopo da pergunta
     if not validar_escopo_pergunta(pergunta):
         return AgentResponse(
@@ -137,7 +138,7 @@ def _retry_sql(pergunta: str, erro_original: str) -> AgentResponse:
         try:
             print(f"Corrigindo SQL — tentativa {tentativa}/{MAX_TENTATIVAS_SQL}...")
             return asyncio.get_event_loop().run_until_complete(_run_corrigido())
-        except ModelHTTPError as e:
+        except Exception as e:
             if tentativa == MAX_TENTATIVAS_SQL:
                 return AgentResponse(
                     resposta=(
