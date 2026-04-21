@@ -44,7 +44,8 @@ def gerar_grafico(
 
     if tipo == "barra":
         bars = ax.barh(rotulos[::-1], valores[::-1], color=CORES[:len(rotulos)])
-        ax.bar_label(bars, fmt=_formatar_valor, padding=4, fontsize=9)
+        labels = [_formatar_valor(v) for v in valores[::-1]]
+        ax.bar_label(bars, labels=labels, padding=4, fontsize=9)
         ax.set_xlabel(colunas[1], fontsize=10)
         ax.xaxis.set_major_formatter(mticker.FuncFormatter(
             lambda x, _: f"R$ {x:,.0f}" if _e_monetario(colunas[1]) else f"{x:,.0f}"
@@ -85,7 +86,7 @@ def _e_monetario(nome_coluna: str) -> bool:
     return any(t in nome_coluna.lower() for t in termos)
 
 
-def _formatar_valor(valor: float, _) -> str:
+def _formatar_valor(valor: float) -> str:
     """Formata valores grandes de forma legível."""
     if valor >= 1_000_000:
         return f"{valor/1_000_000:.1f}M"

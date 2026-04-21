@@ -96,6 +96,8 @@ Colunas:
 5. Para calcular receita, use fat_pedido_total.valor_total_pago_brl.
 6. Para calcular volume de vendas por produto, use fat_itens_pedidos.
 7. O período dos dados vai de setembro de 2016 a outubro de 2018.
+8. Ao agrupar produtos, sempre use id_produto como chave de agrupamento,
+nunca nome_produto — nomes podem se repetir para produtos diferentes.
 
 ## Exemplo de consultas corretas:
 

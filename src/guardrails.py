@@ -85,13 +85,13 @@ def validar_query_sql(query: str) -> None:
     Lança ValueError se detectar comandos proibidos.
     """
     query_lower = query.lower().strip()    
-    # Deve começar com SELECT
-    if not query_lower.startswith("select"):
+    # Deve começar com SELECT e aceitar CTEs com WITH, mas não pode conter comandos de modificação
+    if not query_lower.startswith("select") and not query_lower.startswith("with"):
         raise ValueError(
             f"Apenas queries SELECT são permitidas. "
             f"Query recebida começa com: '{query_lower[:20]}...'"
         )
-    # Não pode conter comandos de modificação
+    # Não pode conter comandos de modificação em nenhuma parte da query
     for comando in COMANDOS_PROIBIDOS:
         # Usa regex para evitar falsos positivos (ex: 'selected' não é 'select')
         if re.search(rf'\b{comando}\b', query_lower):

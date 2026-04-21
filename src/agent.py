@@ -81,7 +81,7 @@ def consultar(pergunta: str) -> AgentResponse:
         return resultado.output
 
     # Nível 1: Retry para erros de API (503 / 429)
-    MAX_TENTATIVAS_API = 1
+    MAX_TENTATIVAS_API = 3
     ESPERA_SEGUNDOS = 15
 
     for tentativa in range(1, MAX_TENTATIVAS_API + 1):
