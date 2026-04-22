@@ -2,19 +2,19 @@
 
 import re
 
-# Palavras que jamais podem aparecer em uma query
+# Palavras que não podem aparecer na Query:
 COMANDOS_PROIBIDOS = [
     "insert", "update", "delete", "drop", "alter",
     "create", "truncate", "replace", "merge", "grant"
 ]
 
-# Termos que indicam que a pergunta está fora do escopo
+# Termos possíveis que indicam que a pergunta está fora do escopo:
 FORA_DE_ESCOPO = [
     "previsão do tempo", "esportes", "política", "receita culinária",
     "filme", "música", "notícia", "futebol", "financeiro pessoal"
 ]
 
-# Padrões comuns de prompt injections para contornar as regras
+# Padrões comuns de prompt injections para contornar as regras:
 PADROES_INJECTION = [
     r"ignore\s+(as\s+)?instru[çc][oõ]es",
     r"esquece?\s+(as\s+)?instru[çc][oõ]es",
@@ -48,7 +48,15 @@ MENSAGEM_MUITO_LONGA = (
 )
 
 def validar_tamanho_pergunta(pergunta: str, limite: int = TAMANHO_MAXIMO_PERGUNTA) -> bool:
-    """ Valida se a pergunta do usuário não excede um limite de caracteres."""
+    """ 
+    Valida se a pergunta do usuário não excede um limite de caracteres.
+
+    Args:
+        pergunta: A pergunta do usuário a ser validada.
+        limite: O número máximo de caracteres permitido (padrão: 500).
+    Returns:
+        True se a pergunta estiver dentro do limite, False caso contrário.
+    """
     return len((pergunta or "").strip()) <= limite
 
 def detectar_prompt_injection(pergunta: str) -> bool:
@@ -58,7 +66,6 @@ def detectar_prompt_injection(pergunta: str) -> bool:
 
     Args:
         pergunta (str): A pergunta do usuário a ser analisada.
-
     Returns:
         bool: True se detectar prompt injection, False caso contrário.
     """
@@ -75,6 +82,8 @@ def validar_tamanho_query(query: str) -> None:
 
     Args:
         query (str): A query SQL a ser validada.
+    Returns:
+        None. Lança ValueError se a query for muito longa.
     """
     if len(query) > TAMANHO_MAXIMO_PERGUNTA:
         raise ValueError(MENSAGEM_MUITO_LONGA)
@@ -83,6 +92,11 @@ def validar_query_sql(query: str) -> None:
     """
     Valida que a query é segura para execução.
     Lança ValueError se detectar comandos proibidos.
+
+    Args:
+        query (str): A query SQL a ser validada.
+    Returns:
+        None. Lança ValueError se detectar comandos proibidos.
     """
     query_lower = query.lower().strip()    
     # Deve começar com SELECT e aceitar CTEs com WITH, mas não pode conter comandos de modificação
@@ -104,6 +118,11 @@ def validar_escopo_pergunta(pergunta: str) -> bool:
     """
     Verifica se a pergunta está dentro do escopo do e-commerce.
     Retorna False se a pergunta for claramente fora do contexto.
+
+    Args:        
+        pergunta: A pergunta do usuário a ser verificada.
+    Returns:
+        True se a pergunta estiver dentro do escopo, False caso contrário.
     """
     pergunta_lower = pergunta.lower()
     for termo in FORA_DE_ESCOPO:

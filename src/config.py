@@ -1,7 +1,7 @@
-"""Configurações para o GenAI Agent, incluindo a chave de API do Gemini."""
+"""Configurações para o Agente e API Key do Gemini."""
 
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv 
 
 load_dotenv()
 

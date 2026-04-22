@@ -1,8 +1,9 @@
-"""Schema do System Prompt para o agente de análise de dados SQL.
+"""
+Schema do System Prompt para o agente de análise de dados SQL.
 Define o contexto, as regras e os exemplos que guiam o modelo Gemini
 na geração de queries SQL corretas e explicações em português."""
 
-# System Prompt do Agente
+# System Prompt do Agente:
 
 SYSTEM_PROMPT = """
 Você é um analista de dados especialista em SQL para um e-commerce brasileiro.

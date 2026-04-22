@@ -1,5 +1,4 @@
 """Anonimização de dados pessoais nos resultados do agente."""
-import re
 
 # Colunas que contêm dados pessoais e devem ser mascaradas
 COLUNAS_SENSIVEIS = {
@@ -10,16 +9,20 @@ COLUNAS_SENSIVEIS = {
     "telefone",
 }
 
-
 def mascarar_nome(nome: str) -> str:
     """
     Mascara um nome completo preservando apenas a inicial do primeiro
     nome e a inicial do sobrenome.
 
     Exemplos:
-        'João Silva'     → 'J. S***'
-        'Dr. Maria Lima' → 'Dr. M. L***'
-        'Ana'            → 'A***'
+        'João Silva'     -> 'J. S***'
+        'Dr. Maria Lima' -> 'Dr. M. L***'
+        'Ana'            -> 'A***'
+
+    Args:
+        nome: O nome completo a ser mascarado.
+    Returns:
+        O nome mascarado.
     """
     if not nome or not isinstance(nome, str):
         return nome
@@ -55,7 +58,7 @@ def anonimizar_resultado(colunas: list[str], linhas: list[list]) -> list[list]:
     Returns:
         Linhas com dados pessoais mascarados.
     """
-    # Identificar quais índices de coluna precisam ser mascarados
+    # Identificação de quais índices de coluna precisam ser mascarados
     indices_sensiveis = [
         i for i, col in enumerate(colunas)
         if col.lower() in COLUNAS_SENSIVEIS

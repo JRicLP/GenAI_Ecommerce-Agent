@@ -1,5 +1,11 @@
-from pydantic import BaseModel, Field
+""" 
+Modelos de dados para a aplicação GenAIAgent com Pydantic.
+Definem as estruturas de dados para a comunicação entre o agente,
+a camada de anonimização e a interface do usuário.
+"""
+
 from typing import Optional
+from pydantic import BaseModel, Field
 
 class SQLQuery(BaseModel):
     """Query SQL gerada pelo modelo para responder à pergunta do usuário."""

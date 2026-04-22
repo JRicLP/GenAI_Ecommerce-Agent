@@ -3,13 +3,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-# Paleta de cores consistente em todo o projeto
+# Paleta de cores personalizada para os gráficos:
 CORES = [
     "#4C72B0", "#DD8452", "#55A868", "#C44E52",
     "#8172B3", "#937860", "#DA8BC3", "#8C8C8C",
     "#CCB974", "#64B5CD"
 ]
-
 
 def gerar_grafico(
     colunas: list[str],
@@ -25,17 +24,20 @@ def gerar_grafico(
         linhas:  Linhas de dados do resultado SQL.
         tipo:    Tipo de gráfico: 'barra', 'linha' ou 'pizza'.
         titulo:  Título exibido no gráfico.
+    Returns:
+        None. O gráfico é exibido diretamente.
     """
     if not linhas or len(colunas) < 2:
         print("Dados insuficientes para gerar gráfico.")
         return
 
-    # Primeira coluna = rótulos, segunda coluna = valores numéricos
+    # Primeira coluna = Rótulos
+    # Segunda coluna = Valores numéricos
     rotulos = [str(row[0]) for row in linhas]
     try:
         valores = [float(row[1]) for row in linhas]
     except (ValueError, TypeError):
-        print("A segunda coluna não é numérica — gráfico não gerado.")
+        print("A segunda coluna não é numérica - gráfico não gerado.")
         return
 
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -81,13 +83,27 @@ def gerar_grafico(
 
 
 def _e_monetario(nome_coluna: str) -> bool:
-    """Verifica se o nome da coluna sugere valor monetário."""
+    """
+    Verifica se o nome da coluna sugere valor monetário.
+
+    Args:
+        nome_coluna: O nome da coluna a ser verificada.
+    Returns:
+        True se a coluna for monetária, False caso contrário.
+    """
     termos = ["brl", "usd", "receita", "valor", "ticket", "preco", "frete"]
     return any(t in nome_coluna.lower() for t in termos)
 
 
 def _formatar_valor(valor: float) -> str:
-    """Formata valores grandes de forma legível."""
+    """
+    Formata valores grandes de forma legível.
+
+    Args:
+        valor: O valor a ser formatado.
+    Returns:
+        A string representando o valor formatado.
+    """
     if valor >= 1_000_000:
         return f"{valor/1_000_000:.1f}M"
     if valor >= 1_000:

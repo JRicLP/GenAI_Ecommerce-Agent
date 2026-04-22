@@ -19,13 +19,13 @@ from src.guardrails import (
     MENSAGEM_MUITO_LONGA,
 )
 
-# Inicializa o modelo Gemini 2.5 Flash
+# Inicialização do modelo Gemini 2.5 Flash
 model = GoogleModel(
     "gemini-2.5-flash",
     provider=GoogleProvider(api_key=GEMINI_API_KEY),
 )
 
-# Cria o agente com tipo de resposta estruturada
+# Criação do agente com tipo de resposta estruturada e ferramentas
 agent = Agent(
     model=model,
     output_type=AgentResponse,
@@ -49,7 +49,7 @@ def consultar(pergunta: str) -> AgentResponse:
         a query SQL gerada, se há dados para mostrar e sugestão de gráfico.
     """
 
-    # Guardrail 1: tamanho da pergunta
+    # Guardrail 1: Tamanho da pergunta
     if not validar_tamanho_pergunta(pergunta):
         return AgentResponse(
             resposta=MENSAGEM_MUITO_LONGA,
@@ -58,7 +58,7 @@ def consultar(pergunta: str) -> AgentResponse:
             sugestao_grafico=None
         )
 
-        # Guardrail 2: prompt injection
+        # Guardrail 2: Prompt injection
     if detectar_prompt_injection(pergunta):
         return AgentResponse(
             resposta=MENSAGEM_INJECTION,
@@ -67,7 +67,7 @@ def consultar(pergunta: str) -> AgentResponse:
             sugestao_grafico=None
         )
     
-        # Guardrail 3: escopo da pergunta
+        # Guardrail 3: Escopo da pergunta
     if not validar_escopo_pergunta(pergunta):
         return AgentResponse(
             resposta=MENSAGEM_FORA_DE_ESCOPO,
@@ -80,7 +80,8 @@ def consultar(pergunta: str) -> AgentResponse:
         resultado = await agent.run(pergunta)
         return resultado.output
 
-    # Nível 1: Retry para erros de API (503 / 429)
+    # Nível 1: Retry para erros de API (503/429)
+
     MAX_TENTATIVAS_API = 3
     ESPERA_SEGUNDOS = 15
 
@@ -106,10 +107,10 @@ def consultar(pergunta: str) -> AgentResponse:
             if "Erro ao executar SQL" in erro_str or "RuntimeError" in erro_str:
                 return _retry_sql(pergunta, erro_str)
 
-            # Qualquer outro erro: re-lança para o caller tratar
+            # Qualquer outro erro: relança para o caller tratar
             raise
 
-    # Se esgotou as tentativas de API
+    # Esgotamento das tentativas de API
     raise RuntimeError(
         "O modelo está indisponível no momento. "
         "Tente novamente em alguns minutos."
@@ -120,6 +121,12 @@ def _retry_sql(pergunta: str, erro_original: str) -> AgentResponse:
     """
     Tenta corrigir um SQL inválido devolvendo o erro ao modelo
     e pedindo uma nova query. Até 2 tentativas adicionais.
+
+    Args:
+        pergunta: A pergunta original do usuário.
+        erro_original: O erro retornado ao tentar executar a query SQL.
+    Returns:
+        AgentResponse: A resposta do agente após tentar corrigir a query SQL.
     """
     MAX_TENTATIVAS_SQL = 2
 

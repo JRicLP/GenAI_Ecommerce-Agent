@@ -1,4 +1,5 @@
 """Ferramentas para interação com o banco de dados SQLite."""
+
 import os
 import sqlite3
 from src.models import QueryResult
